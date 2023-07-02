@@ -43,19 +43,22 @@ class BattleshipGame:
         except FileNotFoundError:
             self.ships = []
 
+        for ship in self.ships:
+            ship["alive"] = len(ship["positions"])
+
     def create_grid(self):
         # Create column names
         for col in range(self.grid_size):
             x = 70 + col * 40
             y = 30
-            self.canvas.create_text(x, y, text=chr(65 + col))
+            self.canvas.create_text(x, y, text=chr(65 + col), font="Helvetica 18 bold")
 
         # Create row names and grid cells
         for row in range(self.grid_size):
             # Create row names
             x = 30
             y = 70 + row * 40
-            self.canvas.create_text(x, y, text=str(row + 1))
+            self.canvas.create_text(x, y, text=str(row + 1), font="Helvetica 18 bold")
 
             for col in range(self.grid_size):
                 x1 = 50 + col * 40
@@ -90,9 +93,34 @@ class BattleshipGame:
                     row * 40 + 50,
                     fill="black",
                 )
+                # update status
+                ship["alive"] -= 1
+                self.blacken_sunk_ships()
+                self.blacken_defeated_player()
+
                 return
 
         self.canvas.itemconfig(self.grid[row][col], fill="light blue")
+
+    def blacken_sunk_ships(self):
+        for ship in self.ships:
+            if ship["alive"] == 0:
+                for r, c in ship["positions"]:
+                    self.canvas.itemconfig(self.grid[r][c], fill="black")
+                self.ships.remove(ship)
+        return
+
+    def blacken_defeated_player(self):
+        ships_alive = 0
+        for ship in self.ships:
+            if ship["player"] == self.player:
+                ships_alive += 1
+
+        if ships_alive == 0:
+            for row in range(self.grid_size):
+                for col in range(self.grid_size):
+                    self.canvas.itemconfig(self.grid[row][col], fill="black")
+        return
 
 
 if __name__ == "__main__":
