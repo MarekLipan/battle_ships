@@ -2,8 +2,8 @@ import tkinter as tk
 import json
 
 # Constants
-PLAYER_COLORS = ["red", "green", "blue", "yellow", "purple"]
-SHIP_POSITIONS_FILE = "ship_positions.json"
+PLAYER_COLORS = ["green", "yellow", "purple", "red", "royalblue1"]
+SHIP_POSITIONS_FILE = "ship_positions_1.json"
 
 
 class BattleshipGame:
